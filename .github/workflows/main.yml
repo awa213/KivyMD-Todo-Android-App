@@ -3,15 +3,12 @@
 name: Build KivyMD Android APK
 
 on:
-  # هذا السير العمل يبدأ عند كل عملية دفع (push) للفرع الرئيسي (main)
   push:
     branches: [ main ]
-  # يسمح بالتشغيل اليدوي من تبويب Actions
   workflow_dispatch:
 
 jobs:
   build:
-    # يعمل على خادم Ubuntu السحابي
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -22,27 +19,25 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Install P4A dependencies
+      - name: Install P4A dependencies (Ubuntu packages)
         run: |
           # تحديث النظام وتثبيت أدوات التطوير الأساسية المطلوبة لعملية التجميع على Ubuntu
           sudo apt update
           sudo apt install -y build-essential libssl-dev libffi-dev python3-dev zip unzip
 
-      - name: Install Python requirements (Kivy, KivyMD, Buildozer, sh)
-        # تثبيت Buildozer بإصدار مستقر
+      - name: Install Python requirements (Kivy, KivyMD, Buildozer, Cython)
+        # تثبيت Buildozer و P4A و Cython بأحدث إصدار لتجنب الأخطاء
         run: |
-          pip install kivy kivymd buildozer==1.4.0 pillow sh
+          pip install kivy kivymd buildozer pillow python-for-android cython
 
       - name: Build APK using Buildozer
-        # استخدام Buildozer بدلاً من P4A لتبسيط عملية التجميع وتجنب أخطاء المعمارية
+        # استخدام Buildozer بدلاً من P4A مع الأمر android debug
         run: |
-          # تمت إزالة أمر buildozer init (لحماية ملف buildozer.spec الموجود بالفعل)
-          # أمر التجميع الفعلي
+          # تمت إزالة أمر buildozer init
           buildozer android debug
           
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
           name: KivyMD_Todo_APK
-          # ملف APK يظهر الآن في مجلد bin الذي تم إنشاؤه بواسطة buildozer
           path: bin/*.apk
