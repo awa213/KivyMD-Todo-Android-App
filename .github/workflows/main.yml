@@ -1,4 +1,5 @@
-# .github/workflows/android_build.yml
+# .github/workflows/main.yml
+
 name: Build KivyMD Android APK
 
 on:
@@ -18,17 +19,19 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Install P4A and Kivy dependencies
+      - name: Install P4A dependencies
         run: |
-          pip install kivy kivymd python-for-android pillow
-          # تثبيت الأدوات المطلوبة لعملية التجميع على Ubuntu، لحل مشاكل مثل "sh"
+          # تحديث النظام وتثبيت أدوات التطوير الأساسية المطلوبة لعملية التجميع على Ubuntu
           sudo apt update
           sudo apt install -y build-essential libssl-dev libffi-dev python3-dev zip unzip
 
-      - name: Build APK with P4A
+      - name: Install Python requirements (Kivy, KivyMD, P4A, sh)
         run: |
-          # لاحظ: يتم استخدام اسم الباكيج (package) واسم التطبيق الخاص بك
-            python -m pythonforandroid.toolchain apk --requirements=python3,kivy,kivymd --private . --package=com.awa213.todo --name="MyTodoApp" --version=0.1 --arch=arm64-v8a,armeabi-v7a          
+          pip install kivy kivymd python-for-android pillow sh
+
+      - name: Build APK with P4A (Single Line Command)
+        run: python -m pythonforandroid.toolchain apk --requirements=python3,kivy,kivymd --private . --package=com.awa213.todo --name="MyTodoApp" --version=0.1 --arch=arm64-v8a,armeabi-v7a
+          
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
