@@ -30,6 +30,11 @@ jobs:
         run: |
           pip install kivy kivymd buildozer pillow python-for-android cython
 
+      - name: Accept Android SDK Licenses
+        # **الحل النهائي لمشكلة الترخيص:** يقوم هذا الأمر بقبول جميع تراخيص Android SDK تلقائياً
+        run: |
+          yes | buildozer android update
+          
       - name: Build APK using Buildozer
         # استخدام Buildozer بدلاً من P4A مع الأمر android debug
         run: |
