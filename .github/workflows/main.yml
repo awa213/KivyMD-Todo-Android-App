@@ -28,8 +28,7 @@ jobs:
       - name: Build APK with P4A
         run: |
           # لاحظ: يتم استخدام اسم الباكيج (package) واسم التطبيق الخاص بك
-          python -m pythonforandroid.toolchain apk --requirements=python3,kivy,kivymd --private . --package=com.awa213.todo --name="MyTodoApp" --version=0.1
-          
+            python -m pythonforandroid.toolchain apk --requirements=python3,kivy,kivymd --private . --package=com.awa213.todo --name="MyTodoApp" --version=0.1 --arch=arm64-v8a,armeabi-v7a          
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
