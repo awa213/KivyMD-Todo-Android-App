@@ -19,6 +19,14 @@ jobs:
         with:
           python-version: '3.11'
 
+      # ⚙️ الخطوة الجديدة: تثبيت حزمة تطوير أندرويد (SDK)
+      # هذا الإجراء يحل جميع مشاكل الترخيص وتهيئة البيئة (الحل لمشكلة Accept Android SDK Licenses)
+      - name: Setup Android SDK and NDK
+        uses: r0adkll/setup-android@v3
+        with:
+          android-version: 34 # أحدث إصدار مستقر من Android SDK
+          java-version: 17 # إصدار جافا متوافق مع Android SDK
+
       - name: Install P4A dependencies (Ubuntu packages)
         run: |
           # تحديث النظام وتثبيت أدوات التطوير الأساسية المطلوبة لعملية التجميع على Ubuntu
@@ -26,19 +34,13 @@ jobs:
           sudo apt install -y build-essential libssl-dev libffi-dev python3-dev zip unzip
 
       - name: Install Python requirements (Kivy, KivyMD, Buildozer, Cython)
-        # تثبيت Buildozer و P4A و Cython بأحدث إصدار لتجنب الأخطاء
         run: |
           pip install kivy kivymd buildozer pillow python-for-android cython
 
-      - name: Accept Android SDK Licenses
-        # **الحل النهائي لمشكلة الترخيص:** يقوم هذا الأمر بقبول جميع تراخيص Android SDK تلقائياً
-        run: |
-          yes | buildozer android update
-          
       - name: Build APK using Buildozer
-        # استخدام Buildozer بدلاً من P4A مع الأمر android debug
+        # استخدام Buildozer مباشرة بعد تهيئة البيئة بشكل صحيح
         run: |
-          # تمت إزالة أمر buildozer init
+          # تم إلغاء أمر تحديث الترخيص لأنه أصبح يتم عبر الإجراء الجاهز
           buildozer android debug
           
       - name: Upload APK artifact
