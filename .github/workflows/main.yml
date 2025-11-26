@@ -28,18 +28,22 @@ jobs:
           sudo apt update
           sudo apt install -y build-essential libssl-dev libffi-dev python3-dev zip unzip
 
-      - name: Install Python requirements (Kivy, KivyMD, P4A, sh)
-        # تثبيت إصدار مستقر من python-for-android لحل مشاكل المعمارية
+      - name: Install Python requirements (Kivy, KivyMD, Buildozer, sh)
+        # تثبيت Buildozer بدلاً من التعامل المباشر مع P4A، لأنها ستستخدم ملف buildozer.spec
         run: |
-          pip install kivy kivymd python-for-android==2023.08.26 pillow sh
+          pip install kivy kivymd buildozer==1.4.0 pillow sh
 
-      - name: Build APK with P4A
-        # الأمر الذي يحدد المعماريات --arch
+      - name: Build APK using Buildozer
+        # استخدام Buildozer بدلاً من P4A لتبسيط عملية التجميع وتجنب أخطاء المعمارية
         run: |
-          python -m pythonforandroid.toolchain apk --requirements=python3,kivy,kivymd --private . --package=com.awa213.todo --name="MyTodoApp" --version=0.1 --arch=arm64-v8a,armeabi-v7a
+          # تهيئة ملف buildozer.spec (ضرورية)
+          buildozer init
+          # أمر التجميع الفعلي
+          buildozer android debug
           
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
           name: KivyMD_Todo_APK
+          # ملف APK يظهر الآن في مجلد bin الذي تم إنشاؤه بواسطة buildozer
           path: bin/*.apk
