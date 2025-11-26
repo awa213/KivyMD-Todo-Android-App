@@ -29,15 +29,14 @@ jobs:
           sudo apt install -y build-essential libssl-dev libffi-dev python3-dev zip unzip
 
       - name: Install Python requirements (Kivy, KivyMD, Buildozer, sh)
-        # تثبيت Buildozer بدلاً من التعامل المباشر مع P4A، لأنها ستستخدم ملف buildozer.spec
+        # تثبيت Buildozer بإصدار مستقر
         run: |
           pip install kivy kivymd buildozer==1.4.0 pillow sh
 
       - name: Build APK using Buildozer
         # استخدام Buildozer بدلاً من P4A لتبسيط عملية التجميع وتجنب أخطاء المعمارية
         run: |
-          # تهيئة ملف buildozer.spec (ضرورية)
-          buildozer init
+          # تمت إزالة أمر buildozer init (لحماية ملف buildozer.spec الموجود بالفعل)
           # أمر التجميع الفعلي
           buildozer android debug
           
