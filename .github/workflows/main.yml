@@ -19,10 +19,10 @@ jobs:
         with:
           python-version: '3.11'
 
-      # ⚙️ الخطوة الجديدة: تثبيت حزمة تطوير أندرويد (SDK)
-      # هذا الإجراء يحل جميع مشاكل الترخيص وتهيئة البيئة (الحل لمشكلة Accept Android SDK Licenses)
+      # ⚙️ الخطوة المصححة: تثبيت حزمة تطوير أندرويد (SDK) باستخدام إجراء بديل وموثوق
+      # تم استبدال r0adkll/setup-android@v3 بـ android-actions/setup-android@v2
       - name: Setup Android SDK and NDK
-        uses: r0adkll/setup-android@v3
+        uses: android-actions/setup-android@v2
         with:
           android-version: 34 # أحدث إصدار مستقر من Android SDK
           java-version: 17 # إصدار جافا متوافق مع Android SDK
@@ -40,11 +40,10 @@ jobs:
       - name: Build APK using Buildozer
         # استخدام Buildozer مباشرة بعد تهيئة البيئة بشكل صحيح
         run: |
-          # تم إلغاء أمر تحديث الترخيص لأنه أصبح يتم عبر الإجراء الجاهز
           buildozer android debug
           
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
           name: KivyMD_Todo_APK
-          path: bin/*.apk
+          path: bin/*.apkر
